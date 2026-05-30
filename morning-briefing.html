@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="#" />
+<title>아침 브리핑</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@400;500&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --ink-2: #3a3a3a;
+    --ink-3: #888;
+    --ink-4: #bbb;
+    --paper: #f9f7f2;
+    --rule: #d0ccc4;
+    --accent: #0a0a0a;
+    --serif: 'Noto Serif KR', 'IM Fell English', Georgia, serif;
+    --sans: 'Noto Sans KR', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 0 0 4rem;
+  }
+
+  /* ─── MASTHEAD ─── */
+  .masthead {
+    border-bottom: 3px solid var(--ink);
+    padding: 1.5rem 2rem 1rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .masthead-title {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .masthead-title span { font-style: italic; font-weight: 400; }
+  .masthead-meta {
+    text-align: right;
+    font-size: 0.72rem;
+    color: var(--ink-3);
+    line-height: 1.7;
+    font-family: var(--sans);
+    letter-spacing: 0.04em;
+  }
+  .masthead-date {
+    font-size: 0.78rem;
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+
+  /* ─── SUBHEAD BAR ─── */
+  .subhead-bar {
+    border-bottom: 1px solid var(--ink);
+    padding: 0.45rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-2);
+    text-transform: uppercase;
+  }
+  .subhead-bar .edition { font-weight: 500; }
+
+  /* ─── MAIN CONTENT ─── */
+  .container { max-width: 720px; margin: 0 auto; padding: 0 2rem; }
+
+  /* ─── SETUP PANEL ─── */
+  .setup-panel {
+    margin: 2rem 0;
+    border: 1.5px solid var(--ink);
+    padding: 1.5rem;
+  }
+  .setup-panel h2 {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.02em;
+  }
+  .setup-panel p {
+    font-size: 0.78rem;
+    color: var(--ink-2);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .setup-panel p a {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .key-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  .key-input {
+    flex: 1;
+    border: 1.5px solid var(--ink);
+    background: white;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.82rem;
+    font-family: var(--sans);
+    color: var(--ink);
+    outline: none;
+  }
+  .key-input:focus { border-color: var(--ink); box-shadow: 3px 3px 0 var(--ink); }
+  .save-btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 0 1.2rem;
+    font-size: 0.78rem;
+    font-family: var(--sans);
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .save-btn:active { opacity: 0.8; }
+  .key-saved {
+    font-size: 0.72rem;
+    color: var(--ink-3);
+    margin-top: 0.4rem;
+  }
+
+  /* ─── FETCH BUTTON ─── */
+  .fetch-row {
+    margin: 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .fetch-btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 0.7rem 1.6rem;
+    font-size: 0.8rem;
+    font-family: var(--sans);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .fetch-btn:hover { opacity: 0.85; }
+  .fetch-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .fetch-status {
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+
+  /* ─── DIVIDER ─── */
+  .rule { border: none; border-top: 1px solid var(--rule); margin: 1.5rem 0; }
+  .rule-heavy { border-top: 2px solid var(--ink); margin: 1.5rem 0; }
+
+  /* ─── NEWS ITEMS ─── */
+  .news-section { margin: 0; }
+  .news-item {
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+  .news-item:last-child { border-bottom: none; }
+
+  .item-number {
+    font-family: var(--serif);
+    font-size: 0.68rem;
+    color: var(--ink-4);
+    letter-spacing: 0.12em;
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+  .item-title-ko {
+    font-family: var(--serif);
+    font-size: clamp(1rem, 2.5vw, 1.18rem);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 0.55rem;
+  }
+  .item-title-en {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--ink-2);
+    margin-bottom: 0.7rem;
+    display: none;
+    line-height: 1.45;
+  }
+  .item-body-ko {
+    font-size: 0.82rem;
+    color: var(--ink-2);
+    line-height: 1.75;
+  }
+  .item-body-en {
+    font-size: 0.82rem;
+    color: var(--ink-2);
+    line-height: 1.75;
+    display: none;
+  }
+  .item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.7rem;
+  }
+  .item-source {
+    font-size: 0.65rem;
+    color: var(--ink-4);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .item-flip {
+    font-size: 0.65rem;
+    color: var(--ink-4);
+    letter-spacing: 0.04em;
+  }
+
+  .news-item.flipped .item-title-en { display: block; }
+  .news-item.flipped .item-body-ko { display: none; }
+  .news-item.flipped .item-body-en { display: block; }
+
+  /* ─── LOADING STATE ─── */
+  .loading-area {
+    padding: 3rem 0;
+    text-align: center;
+  }
+  .loading-dots {
+    display: inline-flex;
+    gap: 6px;
+    margin-bottom: 1rem;
+  }
+  .loading-dots span {
+    width: 6px; height: 6px;
+    background: var(--ink);
+    border-radius: 50%;
+    animation: blink 1.2s infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0.15; }
+    40% { opacity: 1; }
+  }
+  .loading-text {
+    font-size: 0.78rem;
+    color: var(--ink-3);
+    font-style: italic;
+    font-family: var(--serif);
+  }
+
+  /* ─── EMPTY / ERROR ─── */
+  .msg-area {
+    padding: 2.5rem 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--ink-3);
+    font-style: italic;
+    font-family: var(--serif);
+    line-height: 1.8;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    border-top: 3px solid var(--ink);
+    margin: 2rem 2rem 0;
+    padding-top: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    color: var(--ink-4);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ─── BOOX / E-ink optimizations ─── */
+  @media screen and (max-width: 600px) {
+    .masthead { padding: 1.2rem 1.2rem 0.8rem; }
+    .subhead-bar { padding: 0.4rem 1.2rem; }
+    .container { padding: 0 1.2rem; }
+    .footer { margin: 2rem 1.2rem 0; }
+    .item-title-ko { font-size: 1.05rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-title">아침 <span>브리핑</span></div>
+  <div class="masthead-meta">
+    <div class="masthead-date" id="js-date">—</div>
+    <div>MORNING EDITION</div>
+    <div>탭 → 한/영 전환</div>
+  </div>
+</header>
+
+<div class="subhead-bar">
+  <span class="edition">오늘의 주요 뉴스</span>
+  <span id="js-time">—</span>
+</div>
+
+<div class="container">
+
+  <!-- API KEY SETUP -->
+  <div class="setup-panel" id="setup-panel">
+    <h2>API 키 설정</h2>
+    <p>
+      Claude API 키를 입력하면 매번 뉴스를 자동으로 가져옵니다.<br>
+      키는 이 기기의 로컬 스토리지에만 저장되며 외부로 전송되지 않습니다.<br>
+      발급: <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
+    </p>
+    <div class="key-row">
+      <input class="key-input" type="password" id="api-key-input" placeholder="sk-ant-..." />
+      <button class="save-btn" onclick="saveKey()">저장</button>
+    </div>
+    <div class="key-saved" id="key-saved-msg"></div>
+  </div>
+
+  <!-- FETCH BUTTON -->
+  <div class="fetch-row">
+    <button class="fetch-btn" id="fetch-btn" onclick="fetchNews()">뉴스 가져오기</button>
+    <span class="fetch-status" id="fetch-status"></span>
+  </div>
+
+  <hr class="rule-heavy">
+
+  <!-- NEWS OUTPUT -->
+  <div id="news-area">
+    <div class="msg-area">API 키를 저장한 뒤 '뉴스 가져오기'를 누르세요.</div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <span>Powered by Claude</span>
+  <span id="js-footer-date">—</span>
+</footer>
+
+<script>
+// ── DATE / TIME ──────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const days = ['일','월','화','수','목','금','토'];
+  const dateStr = `${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 (${days[now.getDay()]})`;
+  const timeStr = now.toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit'});
+  document.getElementById('js-date').textContent = dateStr;
+  document.getElementById('js-time').textContent = timeStr;
+  document.getElementById('js-footer-date').textContent = dateStr;
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+// ── API KEY ──────────────────────────────────────────
+function saveKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val.startsWith('sk-ant-')) {
+    document.getElementById('key-saved-msg').textContent = '⚠ sk-ant- 로 시작하는 키를 입력해 주세요.';
+    return;
+  }
+  localStorage.setItem('cak', val);
+  document.getElementById('key-saved-msg').textContent = '✓ 저장됨 — 이 기기에서 계속 사용됩니다.';
+  document.getElementById('setup-panel').style.opacity = '0.5';
+}
+
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('cak');
+  if (saved) {
+    document.getElementById('api-key-input').value = saved;
+    document.getElementById('key-saved-msg').textContent = '✓ 저장된 키가 있습니다.';
+    document.getElementById('setup-panel').style.opacity = '0.5';
+    fetchNews();
+  }
+});
+
+// ── FETCH NEWS ───────────────────────────────────────
+async function fetchNews() {
+  const key = localStorage.getItem('cak') || document.getElementById('api-key-input').value.trim();
+  if (!key) {
+    document.getElementById('fetch-status').textContent = 'API 키를 먼저 저장해 주세요.';
+    return;
+  }
+
+  const btn = document.getElementById('fetch-btn');
+  const status = document.getElementById('fetch-status');
+  const area = document.getElementById('news-area');
+
+  btn.disabled = true;
+  status.textContent = '검색 중...';
+  area.innerHTML = `<div class="loading-area">
+    <div class="loading-dots"><span></span><span></span><span></span></div>
+    <p class="loading-text">오늘의 주요 뉴스를 수집하고 있습니다...</p>
+  </div>`;
+
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+
+  const prompt = `오늘(${dateStr}) 전 세계에서 가장 임팩트 있는 주요 뉴스 6개를 웹 검색해서 찾아줘.
+정치·경제·전쟁·재난·기술 중 사회적 파급력이 가장 큰 것 위주로. 한국 관련 뉴스도 있으면 포함해줘.
+
+아래 JSON 형식만 반환해. 마크다운 없이 순수 JSON:
+{"news":[{"title_ko":"한국어 제목","title_en":"English headline","summary_ko":"2문장 한국어 요약","summary_en":"2-sentence English summary","source":"언론사"}]}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1200,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    const text = (data.content || []).map(b => b.type === 'text' ? b.text : '').join('\n');
+    const s = text.indexOf('{'), e = text.lastIndexOf('}');
+    if (s < 0) throw new Error('응답 파싱 실패');
+    const parsed = JSON.parse(text.slice(s, e + 1));
+    renderNews(parsed.news || []);
+    status.textContent = `${new Date().toLocaleTimeString('ko-KR', {hour:'2-digit',minute:'2-digit'})} 기준`;
+  } catch (err) {
+    area.innerHTML = `<div class="msg-area">오류: ${err.message}<br><br>API 키를 확인하거나 잠시 후 다시 시도해 주세요.</div>`;
+    status.textContent = '';
+  }
+  btn.disabled = false;
+}
+
+// ── RENDER ───────────────────────────────────────────
+function renderNews(items) {
+  const area = document.getElementById('news-area');
+  if (!items.length) {
+    area.innerHTML = '<div class="msg-area">뉴스를 찾지 못했어요. 다시 시도해 주세요.</div>';
+    return;
+  }
+  area.innerHTML = '<div class="news-section">' + items.map((n, i) => `
+    <div class="news-item" onclick="this.classList.toggle('flipped'); this.querySelector('.item-flip').textContent = this.classList.contains('flipped') ? '← 한국어로' : 'EN →'">
+      <span class="item-number">No.${String(i+1).padStart(2,'0')}</span>
+      <p class="item-title-ko">${n.title_ko}</p>
+      <p class="item-title-en">${n.title_en}</p>
+      <p class="item-body-ko">${n.summary_ko}</p>
+      <p class="item-body-en">${n.summary_en}</p>
+      <div class="item-footer">
+        <span class="item-source">${n.source || ''}</span>
+        <span class="item-flip">EN →</span>
+      </div>
+    </div>
+  `).join('') + '</div>';
+}
+</script>
+</body>
+</html>
